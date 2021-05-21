@@ -11,7 +11,7 @@ else:
       if len(sys.argv[2:]) < command.min_args:
         message.error('Not enough arguments for command ' + sys.argv[1])
         if command.usage:
-          print('Usage: ./workspace ' + sys.argv[1] + ' ' + command.usage)
+          print('Usage: wks ' + sys.argv[1] + ' ' + command.usage)
       else:
         command.run(sys.argv[2:])
       exit()

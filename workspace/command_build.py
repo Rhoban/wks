@@ -12,6 +12,6 @@ def run(args):
   if not os.path.exists('build'):
     os.makedirs('build')
   
-  cmd = 'cd build; cmake ..; make %s' % ' '.join(args)
+  cmd = 'cd build; cmake -G Ninja ..; ninja %s' % ' '.join(args)
   os.system(cmd)
   

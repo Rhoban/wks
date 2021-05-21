@@ -11,7 +11,7 @@ def run(args):
   print('')
 
   for entry in commands.commands:
-    print(Style.BRIGHT + Fore.BLUE + "./workspace" + Fore.RESET + " " + entry.name + ' ' + Style.RESET_ALL + entry.usage)
+    print(Style.BRIGHT + Fore.BLUE + "wks" + Fore.RESET + " " + entry.name + ' ' + Style.RESET_ALL + entry.usage)
     lines = entry.help.strip().split("\n")
     lines = ["    " + line for line in lines]
     print("\n".join(lines))

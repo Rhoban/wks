@@ -10,6 +10,14 @@ def generate():
   cmake = "cmake_minimum_required(VERSION 3.0)\n"
   cmake += "project(workspace)\n\n"
 
+  cmake += """
+add_compile_options(
+  $<$<CXX_COMPILER_ID:GNU>:-fdiagnostics-color=always>
+  $<$<CXX_COMPILER_ID:Clang>:-fcolor-diagnostics>
+)
+
+"""
+
   for directory in git.get_directories():
     cmakes = ['']
     
