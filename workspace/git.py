@@ -1,4 +1,5 @@
 import yaml
+import subprocess
 import os
 from workspace import env, message, env
 
@@ -93,8 +94,20 @@ def global_command(command):
   message.bright("* Running global command: %s" % command)
 
   for directory in get_directories():
-    print('- In %s ...' % os.path.realpath(directory))
+    message.bright('- In %s ...' % os.path.realpath(directory))
     cmd = 'cd %s; %s' % (directory, command)
     os.system(cmd)
   
   print('')
+
+def status(directory):
+  output = subprocess.getoutput("cd %s; git status --porcelain=v1" % directory)
+  return output
+
+def branch(directory):
+  output = subprocess.getoutput("cd %s; git branch" % directory)[2:]
+  return output
+
+def is_ahead(directory):
+  ret, output = subprocess.getstatusoutput("cd %s; git rev-list @{u}.." % directory)
+  return ret == 0 and output.strip() != ''
