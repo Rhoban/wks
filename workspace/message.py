@@ -24,3 +24,7 @@ def error(text):
 
 def success(text):
   return Fore.GREEN + text + Fore.RESET
+
+def die(message):
+  print(error(message))
+  exit()

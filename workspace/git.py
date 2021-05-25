@@ -59,6 +59,10 @@ def get_directories(directory=None):
   directories = []
   if directory is None:
     directory = env.sources_directory
+
+  if not os.path.isdir(directory):
+    message.die("Directory %s does not exists" % directory)
+  
   for entry in os.scandir(directory):
     full_name = directory + '/' + entry.name
     if os.path.isdir(full_name):
