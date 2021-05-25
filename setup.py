@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="wks",
-    version="0.0.4",
+    version="0.0.5",
     author="Rhoban team",
     author_email="team@rhoban.com",
     description="Simple dependencies manager for cmake projects in your workspace",
