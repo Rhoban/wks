@@ -1,5 +1,5 @@
 from typing import Dict
-from workspace import deps, message, git
+from workspace import env, message, git
 import os
 from colorama import Fore, Back, Style
 
@@ -21,7 +21,7 @@ add_compile_options(
   for directory in git.get_directories():
     cmakes = ['']
     
-    config = deps.get_config(directory)
+    config = env.get_config(directory)
     if config and 'cmakes' in config:
       cmakes = config['cmakes']
     

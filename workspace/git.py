@@ -1,6 +1,6 @@
 import yaml
 import os
-from workspace import deps, message, env
+from workspace import env, message, env
 
 def parse_repository_name(name):
   parts = name.split('/')
@@ -70,7 +70,7 @@ def get_directories(directory=None):
 
 def scan_dependencies(directory):
   changed = False
-  config = deps.get_config(directory)
+  config = env.get_config(directory)
   
   if config and 'deps' in config:
     for entry in config['deps']:
