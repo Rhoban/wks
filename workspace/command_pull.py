@@ -8,4 +8,6 @@ min_args = 0
 
 def run(args):
   git.global_command('git pull')
+  git.scan_all_dependencies()
+  cmake.generate()
   
