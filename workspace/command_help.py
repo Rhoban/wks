@@ -15,3 +15,5 @@ def run(args):
     lines = entry.help.strip().split("\n")
     lines = ["    " + line for line in lines]
     print("\n".join(lines))
+
+  print('')
