@@ -7,24 +7,15 @@ def generate():
   message.bright('* Generating CMake')
   print('')
 
-  cmake = "cmake_minimum_required(VERSION 3.0)\n"
-  cmake += "project(workspace)\n\n"
-
-  cmake += """
-add_compile_options(
-  $<$<CXX_COMPILER_ID:GNU>:-fdiagnostics-color=always>
-  $<$<CXX_COMPILER_ID:Clang>:-fcolor-diagnostics>
-)
-
-"""
+  cmake = "cmake_minimum_required(VERSION 3.16.3)\n\n"
 
   for directory in git.get_directories():
     cmakes = ['']
-    
+
     config = env.get_config(directory)
     if config and 'cmakes' in config:
       cmakes = config['cmakes']
-    
+
     for cmake_name in cmakes:
       cmake_directory = os.path.realpath(directory)
       dname = os.path.basename(os.path.dirname(directory))
@@ -37,8 +28,8 @@ add_compile_options(
 
       cmake += "add_subdirectory(%s %s)\n" % (cmake_directory, project)
       print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
-  
-  f = open('CMakeLists.txt', 'w')
+
+  f = open(env.sources_directory + '/CMakeLists.txt', 'w')
   f.write(cmake)
   f.close()
   message.bright("* Wrote CMakeLists.txt")
