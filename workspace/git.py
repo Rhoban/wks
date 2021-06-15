@@ -108,7 +108,7 @@ def status(directory):
   return output
 
 def branch(directory):
-  output = subprocess.getoutput("cd %s; git branch" % directory)[2:]
+  output = subprocess.getoutput("cd %s; git rev-parse --abbrev-ref HEAD" % directory)
   return output
 
 def is_ahead(directory):
