@@ -10,8 +10,7 @@ def bright(message):
 
 def run_or_fail(cmd):
   if os.system(cmd) != 0:
-    error('Error while running '+cmd)
-    exit()
+    die('Error while running '+cmd)
 
 def emphasis(text):
   return Fore.BLUE + text + Fore.RESET
