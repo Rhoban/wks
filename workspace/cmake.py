@@ -27,7 +27,7 @@ def generate():
       cmake_directory = os.path.realpath(directory)
       dname = os.path.basename(os.path.dirname(directory))
       name = os.path.basename(directory)
-      project = '%s_%s' % (name, dname)
+      project = '%s_%s' % (dname, name)
 
       if cmake_name:
         project += '_' + cmake_name
