@@ -3,6 +3,13 @@ from workspace import env, message, git
 import os
 from colorama import Fore, Back, Style
 
+toplevel_cmake = """
+cmake_minimum_required(VERSION 3.16.3)
+project(wks)
+
+add_subdirectory(src)
+"""
+
 def generate():
   message.bright('* Generating CMake')
   print('')
@@ -32,5 +39,12 @@ def generate():
   f = open(env.sources_directory + '/CMakeLists.txt', 'w')
   f.write(cmake)
   f.close()
+
+  if not os.path.exists('CMakeLists.txt'):
+      message.bright("* No top-level CMakeLists.txt found, generating one...")
+      f = open('CMakeLists.txt', 'w')
+      f.write(toplevel_cmake)
+      f.close()
+
   message.bright("* Wrote CMakeLists.txt")
   print('')
