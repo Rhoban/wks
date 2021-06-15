@@ -10,11 +10,21 @@ project(wks)
 add_subdirectory(src)
 """
 
+cmake_headers = """
+cmake_minimum_required(VERSION 3.16.3)
+
+# Colored compiler output
+add_compile_options(
+  $<$<CXX_COMPILER_ID:GNU>:-fdiagnostics-color=always>
+  $<$<CXX_COMPILER_ID:Clang>:-fcolor-diagnostics>
+)
+"""
+
 def generate():
   message.bright('* Generating CMake')
   print('')
 
-  cmake = "cmake_minimum_required(VERSION 3.16.3)\n\n"
+  cmake = cmake_headers
 
   for directory in git.get_directories():
     cmakes = ['']
