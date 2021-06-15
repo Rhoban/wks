@@ -7,8 +7,7 @@ def parse_repository_name(name):
   parts = name.split('/')
 
   if len(parts) != 2:
-    message.error('Bad repository name: ' + name)
-    exit()
+    message.die('Bad repository name: ' + name)
 
   repository = {
     'vendor': parts[0],
