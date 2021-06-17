@@ -73,13 +73,12 @@ def generate():
       cmake_directory = os.path.realpath(directory)
       dname = os.path.basename(os.path.dirname(directory))
       name = os.path.basename(directory)
-      project = '%s_%s' % (dname, name)
-
+      project = '%s/%s' % (dname, name)
+        
       if cmake_name:
-        project += '_' + cmake_name
-        cmake_directory += '/' + cmake_name
+        project += '/' + cmake_name
 
-      cmake += "add_subdirectory(%s %s)\n" % (cmake_directory, project)
+      cmake += "add_subdirectory(%s)\n" % (project)
       print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
 
   f = open(env.sources_directory + '/CMakeLists.txt', 'w')
