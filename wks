@@ -16,6 +16,7 @@ else:
         command.run(sys.argv[2:])
       exit()
 
-  message.error('Error: command ' + sys.argv[1] + ' not found')
+  print(message.error('Error: command ' + sys.argv[1] + ' not found'))
+  command_help.run([])
 
 
