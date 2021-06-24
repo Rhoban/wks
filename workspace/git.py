@@ -73,8 +73,12 @@ def get_directories(directory=None):
   if not os.path.isdir(directory):
     message.die("Directory %s does not exists" % directory)
   
-  for entry in os.scandir(directory):
-    full_name = directory + '/' + entry.name
+  subdirectories = [entry.name for entry in os.scandir(directory)]
+  subdirectories.sort()
+  
+  for entry in subdirectories:
+    full_name = directory + '/' + entry
+
     if os.path.isdir(full_name):
       if os.path.isdir(full_name+'/.git'):
         directories.append(full_name)
