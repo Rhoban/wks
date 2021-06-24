@@ -8,7 +8,7 @@ min_args = 0
 
 def run(args):
   for repository in args:
-    if not git.install(repository):
+    if not git.install(repository, 'user'):
       message.error("Not installing "+repository+" because the directory already exists")
   git.scan_all_dependencies()
   cmake.generate()

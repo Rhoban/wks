@@ -30,7 +30,7 @@ def parse_repository_name(name):
 
   return repository
 
-def install(repository_name):
+def install(repository_name, source):
   repository = parse_repository_name(repository_name)
   
   if not os.path.exists(repository['directory']):
@@ -40,18 +40,29 @@ def install(repository_name):
     if not os.path.exists(vendor_dir):
       os.makedirs(vendor_dir)
     
-    branch = ''
+    branchNale = ''
     if repository['branch']:
-      branch = '--branch '+repository['branch']
+      branchNale = '--branch '+repository['branch']
     if repository['tag']:
-      branch = '--branch '+repository['tag']
+      branchNale = '--branch '+repository['tag']
 
-    cmd = 'git clone %s %s %s' % (branch, repository['git'], repository['directory'])
+    cmd = 'git clone %s %s %s' % (branchNale, repository['git'], repository['directory'])
 
     message.run_or_fail(cmd)
 
     return True
   else:
+    if repository['branch']:
+        current_branch = branch(repository['directory'])
+        if current_branch != repository['branch']:
+            print(message.warn('WARNING: %s wants branch %s for %s, but it is currently %s' %
+                (source, repository['branch'], repository['full_name'], current_branch)))
+    elif repository['tag']:
+        current_tag = tag(repository['directory'])
+        if current_tag != repository['tag']:
+            print(message.warn('WARNING: %s wants tag %s for %s, but it is currently %s' %
+                (source, repository['tag'], repository['full_name'], current_tag)))
+
     return False
 
 def get_directories(directory=None):
@@ -78,7 +89,7 @@ def scan_dependencies(directory):
   
   if config and 'deps' in config:
     for entry in config['deps']:
-      if install(entry):
+      if install(entry, os.path.basename(directory)):
         changed = True
 
   return changed
@@ -109,6 +120,10 @@ def status(directory):
 
 def branch(directory):
   output = subprocess.getoutput("cd %s; git rev-parse --abbrev-ref HEAD" % directory)
+  return output
+
+def tag(directory):
+  output = subprocess.getoutput("cd %s; git describe" % directory)
   return output
 
 def is_ahead(directory):
