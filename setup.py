@@ -16,7 +16,7 @@ setuptools.setup(
     scripts=['wks'],
     keywords="wks workspace deps",
     install_requires=[
-        "colorama", "pyyaml"
+        "colorama", "pyyaml", "leafy"
     ],
     include_package_data=True,
     python_requires='>=3.6',

@@ -65,7 +65,7 @@ def install(repository_name, source):
 
     return False
 
-def get_directories(directory=None):
+def get_directories(directory=None, code_only=False):
   directories = []
   if directory is None:
     directory = env.sources_directory
@@ -81,9 +81,13 @@ def get_directories(directory=None):
 
     if os.path.isdir(full_name):
       if os.path.isdir(full_name+'/.git'):
+        if code_only:
+          if not os.path.isfile(full_name + '/CMakeLists.txt'):
+            if not os.path.isfile(full_name + '/wks.yml'):
+              continue # ignoring this folder →  not part of the build
         directories.append(full_name)
       else:
-        directories += get_directories(full_name)
+        directories += get_directories(full_name, code_only)
 
   return directories
 
