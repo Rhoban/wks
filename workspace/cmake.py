@@ -87,7 +87,7 @@ def generate():
     dfs.run()
 
     if not dfs.is_dag:
-      message.warn(f"Your dependency graph for {source_directories[source]} is not directed or acyclic !\n")
+      print(message.warn(f"Your dependency graph for {source_directories[source]} is not directed or acyclic !\n"))
 
     for node in list(dfs.reverse_topological_order()):
       if already_add[node]:
@@ -107,7 +107,6 @@ def generate():
         project = '%s/%s' % (dname, name)
         if cmake_name:
           project += '/' + cmake_name
-          print(cmake_name)
 
         cmake += "add_subdirectory(%s)\n" % (project)
         already_add[node] = True
