@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wks",
-    version="0.1.6",
+    version="0.1.7",
     author="Rhoban team",
     author_email="team@rhoban.com",
     description="Simple dependencies manager for cmake projects in your workspace",
@@ -16,7 +16,7 @@ setuptools.setup(
     scripts=['wks'],
     keywords="wks workspace deps",
     install_requires=[
-        "colorama", "pyyaml", "leafy"
+        "colorama", "pyyaml"
     ],
     include_package_data=True,
     python_requires='>=3.6',

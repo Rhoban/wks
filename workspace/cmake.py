@@ -2,8 +2,6 @@ from typing import Dict
 from workspace import env, message, git
 import os
 from colorama import Fore, Back, Style
-from leafy.digraph import DFS
-from leafy.graph import Graph
 
 toplevel_cmake = """
 cmake_minimum_required(VERSION 3.16.3)
@@ -59,58 +57,49 @@ endif()
 """
 
 def generate():
-
   message.bright('* Generating CMake')
   print('')
 
   cmake = cmake_headers
-  source_directories = git.get_directories(code_only=True)
 
-  # construct dependency_graph
-  dependency_graph = Graph(len(source_directories), True)
-  directory_index = {}
-  for index, directory in enumerate(source_directories):
-    directory_index[directory] = index
+  def add_cmake(directory):
+    nonlocal cmake
 
-  for directory in source_directories:
+    cmakes = ['']
     config = env.get_config(directory)
+    if config and 'cmakes' in config:
+      cmakes = config['cmakes']
 
-    if config and 'deps' in config:
-      for d in config['deps']:
-        deps_dir = env.sources_directory + '/' + git.parse_repository_name(d)['full_name']
-        dependency_graph.add_edge(directory_index[directory], directory_index[deps_dir])
-
-  # add source directories
-  already_add = [False] * len(source_directories) # support multiple dependency graph
-  for source in dependency_graph.sources: 
-    dfs = DFS(dependency_graph, source)
-    dfs.run()
-
-    if not dfs.is_dag:
-      print(message.warn(f"Your dependency graph for {source_directories[source]} is not directed or acyclic !\n"))
-
-    for node in list(dfs.reverse_topological_order()):
-      if already_add[node]:
-        continue
-      directory = source_directories[node]
-      cmakes = ['']
-
-      config = env.get_config(directory)
-      if config and 'cmakes' in config:
-          cmakes = config['cmakes']
-   
+    for cmake_name in cmakes:
       cmake_directory = os.path.realpath(directory)
+
       dname = os.path.basename(os.path.dirname(directory))
       name = os.path.basename(directory)
+      project = '%s/%s' % (dname, name)
+        
+      if cmake_name:
+        project += '/' + cmake_name
 
-      for cmake_name in cmakes:
-        project = '%s/%s' % (dname, name)
-        if cmake_name:
-          project += '/' + cmake_name
-
+      if os.path.isfile(cmake_directory + '/' + cmake_name + '/CMakeLists.txt'):
         cmake += "add_subdirectory(%s)\n" % (project)
-        already_add[node] = True
         print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
+
+  added = set()
+  def add_project(directory):
+    nonlocal added
+
+    if directory not in added:
+      added.add(directory)
+      config = env.get_config(directory)
+      if config and 'deps' in config:
+        for dep in config['deps']:
+          dep_directory = git.parse_repository_name(dep)['directory']
+          add_project(dep_directory)
+
+      add_cmake(directory)
+
+  for directory in git.get_directories():
+    add_project(directory)
 
   f = open(env.sources_directory + '/CMakeLists.txt', 'w')
   f.write(cmake)
@@ -124,4 +113,3 @@ def generate():
 
   message.bright("* Wrote CMakeLists.txt")
   print('')
-
