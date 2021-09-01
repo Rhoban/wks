@@ -8,7 +8,10 @@ usage = ""
 min_args = 0
 
 def run(args):
-    print('wks version %s' % pkg_resources.require("wks")[0].version)
+    try:
+        print('wks version %s' % pkg_resources.require("wks")[0].version)
+    except pkg_resources.DistributionNotFound:
+        print('wks version DEV')
     print('Available commands:')
     print('')
 
