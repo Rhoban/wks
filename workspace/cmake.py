@@ -62,15 +62,17 @@ def generate():
 
   cmake = cmake_headers
 
-  for directory in git.get_directories():
-    cmakes = ['']
+  def add_cmake(directory):
+    nonlocal cmake
 
+    cmakes = ['']
     config = env.get_config(directory)
     if config and 'cmakes' in config:
       cmakes = config['cmakes']
 
     for cmake_name in cmakes:
       cmake_directory = os.path.realpath(directory)
+
       dname = os.path.basename(os.path.dirname(directory))
       name = os.path.basename(directory)
       project = '%s/%s' % (dname, name)
@@ -78,8 +80,26 @@ def generate():
       if cmake_name:
         project += '/' + cmake_name
 
-      cmake += "add_subdirectory(%s)\n" % (project)
-      print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
+      if os.path.isfile(cmake_directory + '/' + cmake_name + '/CMakeLists.txt'):
+        cmake += "add_subdirectory(%s)\n" % (project)
+        print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
+
+  added = set()
+  def add_project(directory):
+    nonlocal added
+
+    if directory not in added:
+      added.add(directory)
+      config = env.get_config(directory)
+      if config and 'deps' in config:
+        for dep in config['deps']:
+          dep_directory = git.parse_repository_name(dep)['directory']
+          add_project(dep_directory)
+
+      add_cmake(directory)
+
+  for directory in git.get_directories():
+    add_project(directory)
 
   f = open(env.sources_directory + '/CMakeLists.txt', 'w')
   f.write(cmake)

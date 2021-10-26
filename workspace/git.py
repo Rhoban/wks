@@ -80,7 +80,7 @@ def get_directories(directory=None):
     full_name = directory + '/' + entry
 
     if os.path.isdir(full_name):
-      if os.path.isdir(full_name+'/.git'):
+      if os.path.isdir(full_name +'/.git'):
         directories.append(full_name)
       else:
         directories += get_directories(full_name)

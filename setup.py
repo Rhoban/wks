@@ -5,12 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wks",
-    version="0.1.6",
+    version="0.1.7",
     author="Rhoban team",
     author_email="team@rhoban.com",
     description="Simple dependencies manager for cmake projects in your workspace",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
+    #long_description=long_description,
+    #long_description_content_type="text/markdown",
     url="https://github.com/rhoban/wks/",
     packages=setuptools.find_packages(),
     scripts=['wks'],
