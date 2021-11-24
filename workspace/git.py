@@ -1,4 +1,3 @@
-import yaml
 import subprocess
 import os
 from workspace import env, message, env
