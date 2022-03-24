@@ -43,6 +43,8 @@ The `wks.yml` can contain the following sections:
 * `deps`: a list of dependencies that the repository want to be installed
 * `cmakes`: if the `CMakeLists.txt` for this repository is not at the top level (or not unique), you can specify them
   using this section
+* `install`: a list of shell command that should be run post install
+* `cmake_prefix`: a list of directories to be added to `CMAKE_PREFIX_PATH`
 
 An example is:
 
