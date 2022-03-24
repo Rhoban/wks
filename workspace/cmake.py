@@ -7,6 +7,8 @@ toplevel_cmake = """
 cmake_minimum_required(VERSION 3.16.3)
 project(wks)
 
+{PREFIX_PATHS}
+
 # Libs are in lib/ and binaries in bin/
 include(GNUInstallDirs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
@@ -85,12 +87,16 @@ def generate():
         print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
 
   added = set()
+  prefix_path = []
   def add_project(directory):
     nonlocal added
 
     if directory not in added:
       added.add(directory)
       config = env.get_config(directory)
+      if config and 'cmake_prefixes' in config:
+          for entry in config['cmake_prefixes']:
+              prefix_path.append(directory + '/' + entry)
       if config and 'deps' in config:
         for dep in config['deps']:
           dep_directory = git.parse_repository_name(dep)['directory']
@@ -106,9 +112,12 @@ def generate():
   f.close()
 
   if not os.path.exists('CMakeLists.txt'):
+      prefix_paths = ''
+      for entry in prefix_path:
+          prefix_path += "list(APPEND CMAKE_PREFIX_PATH \""+entry+"\")\n"
       message.bright("* No top-level CMakeLists.txt found, generating one...")
       f = open('CMakeLists.txt', 'w')
-      f.write(toplevel_cmake)
+      f.write(toplevel_cmake.replace('{PREFIX_PATHS}', prefix_paths))
       f.close()
 
   message.bright("* Wrote CMakeLists.txt")

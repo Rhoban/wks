@@ -50,7 +50,7 @@ def install(repository_name, source):
     message.run_or_fail(cmd)
 
     config = env.get_config(repository['directory'])
-    if 'install' in config:
+    if config and 'install' in config:
         for command in config['install']:
             cmd = 'cd %s; %s' % (repository['directory'], command)
             message.run_or_fail(cmd)
