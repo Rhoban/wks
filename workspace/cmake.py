@@ -114,7 +114,7 @@ def generate():
   if not os.path.exists('CMakeLists.txt'):
       prefix_paths = ''
       for entry in prefix_path:
-          prefix_path += "list(APPEND CMAKE_PREFIX_PATH \""+entry+"\")\n"
+          prefix_paths += "list(APPEND CMAKE_PREFIX_PATH \""+entry+"\")\n"
       message.bright("* No top-level CMakeLists.txt found, generating one...")
       f = open('CMakeLists.txt', 'w')
       f.write(toplevel_cmake.replace('{PREFIX_PATHS}', prefix_paths))
