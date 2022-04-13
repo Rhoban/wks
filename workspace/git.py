@@ -39,13 +39,13 @@ def install(repository_name, source):
     if not os.path.exists(vendor_dir):
       os.makedirs(vendor_dir)
     
-    branchNale = ''
+    branchName = ''
     if repository['branch']:
-      branchNale = '--branch '+repository['branch']
+      branchName = '--branch '+repository['branch']
     if repository['tag']:
-      branchNale = '--branch '+repository['tag']
+      branchName = '--branch '+repository['tag']
 
-    cmd = 'git clone %s %s %s' % (branchNale, repository['git'], repository['directory'])
+    cmd = 'git clone %s %s %s' % (branchName, repository['git'], repository['directory'])
 
     message.run_or_fail(cmd)
 
