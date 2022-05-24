@@ -7,8 +7,6 @@ toplevel_cmake = """
 cmake_minimum_required(VERSION 3.16.3)
 project(wks)
 
-{PREFIX_PATHS}
-
 # Libs are in lib/ and binaries in bin/
 include(GNUInstallDirs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
@@ -20,6 +18,8 @@ add_subdirectory(src)
 
 cmake_headers = """
 cmake_minimum_required(VERSION 3.16.3)
+
+{PREFIX_PATHS}
 
 # Colored compiler output
 add_compile_options(
@@ -58,67 +58,71 @@ endif()
 
 """
 
+
 def generate():
-  message.bright('* Generating CMake')
-  print('')
+    message.bright("* Generating CMake")
+    print("")
 
-  cmake = cmake_headers
+    cmake = cmake_headers
 
-  def add_cmake(directory):
-    nonlocal cmake
+    def add_cmake(directory):
+        nonlocal cmake
 
-    cmakes = ['']
-    config = env.get_config(directory)
-    if config and 'cmakes' in config:
-      cmakes = config['cmakes']
+        cmakes = [""]
+        config = env.get_config(directory)
+        if config and "cmakes" in config:
+            cmakes = config["cmakes"]
 
-    for cmake_name in cmakes:
-      cmake_directory = os.path.realpath(directory)
+        for cmake_name in cmakes:
+            cmake_directory = os.path.realpath(directory)
 
-      dname = os.path.basename(os.path.dirname(directory))
-      name = os.path.basename(directory)
-      project = '%s/%s' % (dname, name)
-        
-      if cmake_name:
-        project += '/' + cmake_name
+            dname = os.path.basename(os.path.dirname(directory))
+            name = os.path.basename(directory)
+            project = "%s/%s" % (dname, name)
 
-      if os.path.isfile(cmake_directory + '/' + cmake_name + '/CMakeLists.txt'):
-        cmake += "add_subdirectory(%s)\n" % (project)
-        print('- %s [%s]' % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
+            if cmake_name:
+                project += "/" + cmake_name
 
-  added = set()
-  prefix_path = []
-  def add_project(directory):
-    nonlocal added
+            if os.path.isfile(cmake_directory + "/" + cmake_name + "/CMakeLists.txt"):
+                cmake += "add_subdirectory(%s)\n" % (project)
+                print("- %s [%s]" % (project, Style.DIM + cmake_directory + Style.RESET_ALL))
 
-    if directory not in added:
-      added.add(directory)
-      config = env.get_config(directory)
-      if config and 'cmake_prefixes' in config:
-          for entry in config['cmake_prefixes']:
-              prefix_path.append(directory + '/' + entry)
-      if config and 'deps' in config:
-        for dep in config['deps']:
-          dep_directory = git.parse_repository_name(dep)['directory']
-          add_project(dep_directory)
+    added = set()
+    prefix_path = []
 
-      add_cmake(directory)
+    def add_project(directory):
+        nonlocal added
 
-  for directory in git.get_directories():
-    add_project(directory)
+        if directory not in added:
+            added.add(directory)
+            config = env.get_config(directory)
+            if config and "cmake_prefixes" in config:
+                for entry in config["cmake_prefixes"]:
+                    prefix_path.append(directory + "/" + entry)
+            if config and "deps" in config:
+                for dep in config["deps"]:
+                    dep_directory = git.parse_repository_name(dep)["directory"]
+                    add_project(dep_directory)
 
-  f = open(env.sources_directory + '/CMakeLists.txt', 'w')
-  f.write(cmake)
-  f.close()
+            add_cmake(directory)
 
-  if not os.path.exists('CMakeLists.txt'):
-      prefix_paths = ''
-      for entry in prefix_path:
-          prefix_paths += "list(APPEND CMAKE_PREFIX_PATH \""+entry+"\")\n"
-      message.bright("* No top-level CMakeLists.txt found, generating one...")
-      f = open('CMakeLists.txt', 'w')
-      f.write(toplevel_cmake.replace('{PREFIX_PATHS}', prefix_paths))
-      f.close()
+    for directory in git.get_directories():
+        add_project(directory)
 
-  message.bright("* Wrote CMakeLists.txt")
-  print('')
+    prefix_paths = ""
+    for entry in prefix_path:
+        prefix_paths += 'list(APPEND CMAKE_PREFIX_PATH "' + entry + '")\n'
+    cmake = cmake.replace("{PREFIX_PATHS}", prefix_paths)
+
+    f = open(env.sources_directory + "/CMakeLists.txt", "w")
+    f.write(cmake)
+    f.close()
+
+    if not os.path.exists("CMakeLists.txt"):
+        message.bright("* No top-level CMakeLists.txt found, generating one...")
+        f = open("CMakeLists.txt", "w")
+        f.write(toplevel_cmake)
+        f.close()
+
+    message.bright("* Wrote CMakeLists.txt")
+    print("")

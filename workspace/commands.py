@@ -15,5 +15,5 @@ from workspace import (
 commands = []
 entries = locals().copy()
 for name in entries:
-    if name.startswith('command_'):
+    if name.startswith("command_"):
         commands.append(entries[name])
