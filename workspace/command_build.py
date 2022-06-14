@@ -24,6 +24,9 @@ def run(args):
             result = os.system(cmd)
 
     if result != 0:
+        message.bright(message.error("\n! Errors while building, read log for more details\n"))
         exit(1)
+    else:
+        message.bright(message.success("\nBuild was successful\n"))
 
     
