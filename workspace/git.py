@@ -122,10 +122,16 @@ def scan_all_dependencies():
                 changed = True
 
 
-def global_command(command):
+def global_command(command, vendor_filter = None):
     message.bright("* Running global command: %s" % command)
 
     for directory in get_directories():
+        if vendor_filter is not None:
+            parts = directory.split("/")
+            vendor = parts[-2]
+            if vendor.lower() != vendor_filter.lower():
+                continue
+            
         message.bright("- In %s ..." % os.path.realpath(directory))
         cmd = "cd %s; %s" % (directory, command)
         os.system(cmd)

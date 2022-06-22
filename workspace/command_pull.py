@@ -8,6 +8,7 @@ min_args = 0
 
 
 def run(args):
-    git.global_command("git pull")
+    vendor_filter = None if (len(args) == 0) else args[0]
+    git.global_command("git pull", vendor_filter)
     git.scan_all_dependencies()
     cmake.generate()
