@@ -1,6 +1,7 @@
 import subprocess
 import os
 from workspace import env, message, env
+import threading
 
 
 def parse_repository_name(name):
@@ -122,19 +123,31 @@ def scan_all_dependencies():
                 changed = True
 
 
-def global_command(command, vendor_filter = None):
+def global_command(command, vendor_filter=None):
     message.bright("* Running global command: %s" % command)
 
-    for directory in get_directories():
+    directories = get_directories()
+
+    threads: list[threading.Thread] = [None] * len(directories)
+    processes: list[subprocess.CompletedProcess] = threads.copy()
+
+    def thread_func(index: int, dir: str, cmd: str):
+        processes[index] = subprocess.run(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dir)
+
+    for index, directory in enumerate(directories):
         if vendor_filter is not None:
             parts = directory.split("/")
             vendor = parts[-2]
             if vendor.lower() != vendor_filter.lower():
                 continue
-            
+
+        threads[index] = threading.Thread(None, thread_func, args=(index, directory, command))
+        threads[index].start()
+
+    for index, thread in enumerate(threads):
+        thread.join()
         message.bright("- In %s ..." % os.path.realpath(directory))
-        cmd = "cd %s; %s" % (directory, command)
-        os.system(cmd)
+        print(processes[index].stdout.decode())
 
     print("")
 
