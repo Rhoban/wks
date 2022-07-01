@@ -144,8 +144,8 @@ def global_command(command, vendor_filter=None):
         threads[index] = threading.Thread(None, thread_func, args=(index, directory, command))
         threads[index].start()
 
-    for index, thread in enumerate(threads):
-        thread.join()
+    for index, directory in enumerate(directories):
+        threads[index].join()
         message.bright("- In %s ..." % os.path.realpath(directory))
         print(processes[index].stdout.decode())
 
