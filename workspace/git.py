@@ -126,6 +126,7 @@ def scan_all_dependencies():
 def global_command(command, vendor_filter=None):
     message.bright("* Running global command: %s" % command)
 
+    use_threads = os.getenv('WKS_NO_THREADS') is None
     directories = get_directories()
 
     threads: list[threading.Thread] = [None] * len(directories)
@@ -141,13 +142,18 @@ def global_command(command, vendor_filter=None):
             if vendor.lower() != vendor_filter.lower():
                 continue
 
-        threads[index] = threading.Thread(None, thread_func, args=(index, directory, command))
-        threads[index].start()
+        if use_threads:
+            threads[index] = threading.Thread(None, thread_func, args=(index, directory, command))
+            threads[index].start()
+        else:
+            message.bright("> %s" % directory)
+            thread_func(index, directory, command)
 
-    for index, directory in enumerate(directories):
-        threads[index].join()
-        message.bright("- In %s ..." % os.path.realpath(directory))
-        print(processes[index].stdout.decode())
+    if use_threads:
+        for index, directory in enumerate(directories):
+            threads[index].join()
+            message.bright("- In %s ..." % os.path.realpath(directory))
+            print(processes[index].stdout.decode())
 
     print("")
 
