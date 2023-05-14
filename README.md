@@ -41,6 +41,8 @@ All repositories are fetched for GitHub, and repositories can have those formats
 The `wks.yml` can contain the following sections:
 
 * `deps`: a list of dependencies that the repository want to be installed
+* `optional`: a list of optional dependencies, they will not be installed but it ensure that the projects will appear
+  in the proper order in the generated `CMakeLists.txt`
 * `cmakes`: if the `CMakeLists.txt` for this repository is not at the top level (or not unique), you can specify them
   using this section
 * `install`: a list of shell command that should be run post install

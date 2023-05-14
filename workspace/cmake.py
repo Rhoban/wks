@@ -99,10 +99,17 @@ def generate():
             if config and "cmake_prefixes" in config:
                 for entry in config["cmake_prefixes"]:
                     prefix_path.append(directory + "/" + entry)
+
+            dependencies = []
+
             if config and "deps" in config:
-                for dep in config["deps"]:
-                    dep_directory = git.parse_repository_name(dep)["directory"]
-                    add_project(dep_directory)
+                dependencies += config["deps"]
+            if config and "optional" in config:
+                dependencies += config["optional"]
+            
+            for dep in dependencies:
+                dep_directory = git.parse_repository_name(dep)["directory"]
+                add_project(dep_directory)
 
             add_cmake(directory)
 
