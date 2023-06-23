@@ -2,6 +2,7 @@ import sys
 
 from workspace import (
     command_build,
+    command_clean,
     command_cmake,
     command_help,
     command_install,
