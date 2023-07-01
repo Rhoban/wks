@@ -126,14 +126,23 @@ def scan_all_dependencies():
 def global_command(command, vendor_filter=None):
     message.bright("* Running global command: %s" % command)
 
-    use_threads = os.getenv('WKS_NO_THREADS') is None
+    use_threads = os.getenv("WKS_NO_THREADS") is None
     directories = get_directories()
 
     threads: list[threading.Thread] = [None] * len(directories)
     processes: list[subprocess.CompletedProcess] = threads.copy()
+    has_error: bool = False
 
     def thread_func(index: int, dir: str, cmd: str):
         processes[index] = subprocess.run(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dir)
+
+    def show_output(process):
+        global has_error
+        if process.returncode != 0:
+            has_error = True
+            message.error(process.stdout.decode())
+        else:
+            print(process.stdout.decode())
 
     for index, directory in enumerate(directories):
         if vendor_filter is not None:
@@ -148,14 +157,16 @@ def global_command(command, vendor_filter=None):
         else:
             message.bright("> %s" % directory)
             thread_func(index, directory, command)
-            print(processes[index].stdout.decode())
+            show_output(processes[index])
 
     if use_threads:
         for index, directory in enumerate(directories):
             threads[index].join()
             message.bright("- In %s ..." % os.path.realpath(directory))
-            print(processes[index].stdout.decode())
+            show_output(processes[index])
 
+    if has_error:
+        message.error("Some commands failed")
     print("")
 
 
