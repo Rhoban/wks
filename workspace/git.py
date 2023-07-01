@@ -140,7 +140,7 @@ def global_command(command, vendor_filter=None):
         global has_error
         if process.returncode != 0:
             has_error = True
-            message.error(process.stdout.decode())
+            print(message.error(process.stdout.decode()))
         else:
             print(process.stdout.decode())
 
