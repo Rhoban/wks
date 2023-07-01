@@ -137,9 +137,7 @@ def global_command(command, vendor_filter=None):
         processes[index] = subprocess.run(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dir)
 
     def show_output(process):
-        global has_error
         if process.returncode != 0:
-            has_error = True
             print(message.error(process.stdout.decode()))
         else:
             print(process.stdout.decode())
@@ -158,12 +156,16 @@ def global_command(command, vendor_filter=None):
             message.bright("> %s" % directory)
             thread_func(index, directory, command)
             show_output(processes[index])
+            if processes[index].returncode != 0:
+                has_error = True
 
     if use_threads:
         for index, directory in enumerate(directories):
             threads[index].join()
             message.bright("- In %s ..." % os.path.realpath(directory))
             show_output(processes[index])
+            if processes[index].returncode != 0:
+                has_error = True
 
     if has_error:
         print(message.error("Some commands failed"))
