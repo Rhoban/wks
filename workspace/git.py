@@ -148,6 +148,7 @@ def global_command(command, vendor_filter=None):
         else:
             message.bright("> %s" % directory)
             thread_func(index, directory, command)
+            print(processes[index].stdout.decode())
 
     if use_threads:
         for index, directory in enumerate(directories):
