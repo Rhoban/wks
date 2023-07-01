@@ -167,9 +167,9 @@ def global_command(command, vendor_filter=None):
             if processes[index].returncode != 0:
                 has_error = True
 
+    print("")
     if has_error:
         print(message.error("Some commands failed"))
-    print("")
 
 
 def status(directory):
