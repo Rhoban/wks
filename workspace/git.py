@@ -166,7 +166,7 @@ def global_command(command, vendor_filter=None):
             show_output(processes[index])
 
     if has_error:
-        message.error("Some commands failed")
+        print(message.error("Some commands failed"))
     print("")
 
 
