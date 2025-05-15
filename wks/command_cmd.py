@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from . import env, git, message, cmake
 
 name = "cmd"
