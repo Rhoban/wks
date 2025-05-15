@@ -6,6 +6,7 @@ from workspace import (
     command_cmake,
     command_help,
     command_install,
+    command_install_requirements,
     command_pull,
     command_status,
     command_graph,
