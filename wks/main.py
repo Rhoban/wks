@@ -19,3 +19,6 @@ def main():
 
         print(message.error("Error: command " + sys.argv[1] + " not found"))
         command_help.run([])
+
+if __name__ == "__main__":
+    main()
