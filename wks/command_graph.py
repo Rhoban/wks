@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from . import env, git, message, cmake
 
 name = "graph"
@@ -11,6 +10,8 @@ colors = {}
 
 def color(vendor):
     global colors
+
+    import numpy as np
 
     if vendor not in colors:
         r, g, b = np.random.randint(100, 255, 3)
