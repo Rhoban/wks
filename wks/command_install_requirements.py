@@ -8,13 +8,12 @@ help = """Install packages requirements"""
 usage = ""
 min_args = 0
 
-
 def run(args):
+    message.bright("* Installing wks basics")
+    os.system("sudo apt install -qqy cmake ninja-build g++")
+    
     for directory in git.get_directories():
         config = env.get_config(directory)
-
-        message.bright("* Installing wks basics")
-        os.system("sudo apt install -qqy cmake ninja-build g++")
 
         if config is not None and "requirements" in config:
             message.bright(f"* Executing requirements for {directory}")
