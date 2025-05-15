@@ -1,5 +1,5 @@
 import os
-from workspace import env, git, message, cmake
+from . import env, git, message, cmake
 
 name = "cmake"
 help = """(Re-)Generates the meta cmake"""

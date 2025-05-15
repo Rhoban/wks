@@ -1,7 +1,7 @@
 import os
 import subprocess
 from colorama import Fore, Back, Style
-from workspace import env, git, message, cmake
+from . import env, git, message, cmake
 
 name = "status"
 help = """Shows status for projects"""

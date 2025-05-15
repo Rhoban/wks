@@ -1,5 +1,5 @@
 import os
-from workspace import env, git, message, cmake
+from . import env, git, message, cmake
 
 name = "pull"
 help = """Pull all the repositories"""

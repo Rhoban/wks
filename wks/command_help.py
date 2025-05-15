@@ -1,5 +1,5 @@
 from colorama import Fore, Back, Style
-from workspace import commands, message
+from . import commands, message
 import pkg_resources  # part of setuptools
 
 name = "help"
@@ -17,7 +17,14 @@ def run(args):
     print("")
 
     for entry in commands.commands:
-        message.bright(message.emphasis("wks") + " " + entry.name + " " + Style.RESET_ALL + entry.usage)
+        message.bright(
+            message.emphasis("wks")
+            + " "
+            + entry.name
+            + " "
+            + Style.RESET_ALL
+            + entry.usage
+        )
         lines = entry.help.strip().split("\n")
         lines = ["    " + line for line in lines]
         print("\n".join(lines))

@@ -1,5 +1,5 @@
 from typing import Dict
-from workspace import env, message, git
+from . import env, message, git
 import os
 from colorama import Fore, Back, Style
 

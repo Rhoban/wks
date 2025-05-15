@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from workspace import env, git, message, cmake
+from . import env, git, message, cmake
 
 name = "cmd"
 help = """Run a command in all dependencies"""

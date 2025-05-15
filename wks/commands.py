@@ -1,6 +1,6 @@
 import sys
 
-from workspace import (
+from . import (
     command_build,
     command_clean,
     command_cmake,

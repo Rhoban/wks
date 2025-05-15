@@ -1,6 +1,6 @@
 import subprocess
 import os
-from workspace import env, git, message, cmake
+from . import env, git, message, cmake
 
 name = "clean"
 help = """Cleans the build"""
@@ -15,7 +15,11 @@ def run(args):
         cmd = "cd build; ninja clean"
         os.system(cmd)
     else:
-        print(message.warn("Ninja was not found, you can consider: apt-get install ninja-build"))
+        print(
+            message.warn(
+                "Ninja was not found, you can consider: apt-get install ninja-build"
+            )
+        )
         if input("Continue with Makefiles? (y/n) ") == "y":
             cmd = "cd build; make clean"
             os.system(cmd)

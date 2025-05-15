@@ -1,6 +1,6 @@
 import subprocess
 import os
-from workspace import env, message, env
+from . import env, message, env
 import threading
 
 
@@ -20,8 +20,13 @@ def parse_repository_name(name):
             repository["name"] = name
             repository[markers[marker]] = value
 
-    repository["directory"] = env.sources_directory + "/" + repository["vendor"] + "/" + repository["name"]
-    repository["git"] = "git@github.com:%s/%s.git" % (repository["vendor"], repository["name"])
+    repository["directory"] = (
+        env.sources_directory + "/" + repository["vendor"] + "/" + repository["name"]
+    )
+    repository["git"] = "git@github.com:%s/%s.git" % (
+        repository["vendor"],
+        repository["name"],
+    )
     repository["full_name"] = "%s/%s" % (repository["vendor"], repository["name"])
 
     return repository
@@ -43,7 +48,11 @@ def install(repository_name, source):
         if repository["tag"]:
             branchName = "--branch " + repository["tag"]
 
-        cmd = "git clone %s %s %s" % (branchName, repository["git"], repository["directory"])
+        cmd = "git clone %s %s %s" % (
+            branchName,
+            repository["git"],
+            repository["directory"],
+        )
 
         message.run_or_fail(cmd)
 
@@ -61,7 +70,12 @@ def install(repository_name, source):
                 print(
                     message.warn(
                         "WARNING: %s wants branch %s for %s, but it is currently %s"
-                        % (source, repository["branch"], repository["full_name"], current_branch)
+                        % (
+                            source,
+                            repository["branch"],
+                            repository["full_name"],
+                            current_branch,
+                        )
                     )
                 )
         elif repository["tag"]:
@@ -70,7 +84,12 @@ def install(repository_name, source):
                 print(
                     message.warn(
                         "WARNING: %s wants tag %s for %s, but it is currently %s"
-                        % (source, repository["tag"], repository["full_name"], current_tag)
+                        % (
+                            source,
+                            repository["tag"],
+                            repository["full_name"],
+                            current_tag,
+                        )
                     )
                 )
 
@@ -134,7 +153,9 @@ def global_command(command, vendor_filter=None):
     has_error: bool = False
 
     def thread_func(index: int, dir: str, cmd: str):
-        processes[index] = subprocess.run(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dir)
+        processes[index] = subprocess.run(
+            cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dir
+        )
 
     def show_output(process):
         if process.returncode != 0:
@@ -150,7 +171,9 @@ def global_command(command, vendor_filter=None):
                 continue
 
         if use_threads:
-            threads[index] = threading.Thread(None, thread_func, args=(index, directory, command))
+            threads[index] = threading.Thread(
+                None, thread_func, args=(index, directory, command)
+            )
             threads[index].start()
         else:
             message.bright("> %s" % directory)
