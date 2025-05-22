@@ -15,8 +15,13 @@ def run(args):
     if not os.path.exists("build"):
         os.makedirs("build")
 
+    run_cmake = not os.path.exists("build/CMakeCache.txt")
+
+    cmd = "cd build;"
     if subprocess.getoutput("which ninja") != "":
-        cmd = "cd build; cmake -G Ninja ..; ninja %s" % " ".join(args)
+        if run_cmake:
+            cmd += "cmake -G Ninja ..;"
+        cmd += "ninja %s" % " ".join(args)
         result = os.system(cmd)
     else:
         print(
@@ -25,7 +30,9 @@ def run(args):
             )
         )
         if input("Continue with Makefiles? (y/n) ") == "y":
-            cmd = "cd build; cmake ..; make %s" % " ".join(args)
+            if run_cmake:
+                cmd += "cmake ..;"
+            cmd += "make %s" % " ".join(args)
             result = os.system(cmd)
 
     if result != 0:
