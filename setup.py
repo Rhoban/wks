@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/rhoban/wks/",
     packages=setuptools.find_packages(),
     keywords="wks workspace deps",
-    install_requires=["colorama", "pyyaml", "setuptools"],
+    install_requires=["colorama", "pyyaml"],
     include_package_data=True,
     python_requires=">=3.6",
     entry_points={
