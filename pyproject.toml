@@ -1,0 +1,16 @@
+[project]
+name = "wks"
+version = "0.4.7"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Rhoban team", email = "team@rhoban.com" }]
+dependencies = ["colorama", "pyyaml"]
+description = "Simple dependencies manager for cmake projects in your workspace"
+keywords = ["wks", "workspace", "deps"]
+
+[project.urls]
+Homepage = "https://github.com/rhoban/wks/"
+Repository = "https://github.com/rhoban/wks/"
+
+[project.scripts]
+wks = "wks:main.main"
