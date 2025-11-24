@@ -24,7 +24,7 @@ def generate():
                 bash_script += "\n"
                 if cd is not None:
                     bash_script += f"cd {directory}/{cd}\n"
-                bash_script += f"{command} $*"
+                bash_script += f"{directory}/{command} $*"
 
                 script_filename = f"scripts/{name}"
 
