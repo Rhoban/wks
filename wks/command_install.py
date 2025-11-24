@@ -1,5 +1,5 @@
 import os
-from . import env, git, message, cmake
+from . import env, git, message, cmake, scripts
 
 name = "install"
 help = """Installs a module given its name"""
@@ -15,3 +15,4 @@ def run(args):
             )
     git.scan_all_dependencies()
     cmake.generate()
+    scripts.generate()
