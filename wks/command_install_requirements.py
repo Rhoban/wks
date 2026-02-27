@@ -10,6 +10,7 @@ min_args = 0
 
 def run(args):
     message.bright("* Installing wks basics")
+    os.system("sudo apt update")
     os.system("sudo apt install -qqy cmake ninja-build g++")
     
     for directory in git.get_directories():
